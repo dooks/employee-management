@@ -6,9 +6,14 @@ using std::string;
 
 class Employee {
   friend class Manager;
-  Employee();
-  ~Employee();
-  void destroy();
+
+  enum etype {
+    EMPLOYEE = 0,
+    PRODUCTION,
+    SUPERVISOR,
+    TEAMLEADER
+  };
+  etype m_type;
 
 protected:
   string m_name;
@@ -16,16 +21,16 @@ protected:
   date   m_hire;
 
 public:
-  static Employee* create();
-
-  // Accessors
-  void setID(int);
-  void setName(string);
-  void setDate(int, int, int);
+  Employee();
 
   // Mutators
-  int      getID() { return     m_number; }
-  string getName() { return       m_name; }
-  string getDate() { return m_hire.str(); }
+  void setID(int id);
+  void setName(string name);
+  void setDate(int month, int day, int year);
+
+  // Accessors 
+  int      getID();
+  string getName();
+  string getDate();
 };
 

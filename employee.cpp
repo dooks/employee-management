@@ -4,24 +4,22 @@
 #include "employee.h"
 using std::string;
 
-Employee::Employee() : m_name(""), m_number(0), m_hire(0) {}
-
-Employee* Employee::create() {
-  Employee* retval = new Employee();
-  Manager::list.push_back(retval);
-  return retval;
+Employee::Employee() :
+  m_name(""), m_number(0), m_hire(), m_type(EMPLOYEE) {
+  // Do nothing
+  Manager::add(this);
 }
 
-void Employee::setID(int id) {
-  m_number = id;
+// Mutators
+void Employee::setID(int id)        { m_number = id; }
+void Employee::setName(string name) { m_name = name; }
+void Employee::setDate(int month, int day, int year) {
+  m_hire.setMonth(month);
+  m_hire.setDay(day);
+  m_hire.setYear(year);
 }
 
-void Employee::setName(string name) {
-  m_number = m_name;
-}
-
-void Employee::setID(int month, int day, int year) {
-  m_hire.month = month;
-  m_hire.day   = day;
-  m_hire.year  = year;
-}
+// Accessors
+int Employee::getID()      { return m_number;     }
+string Employee::getName() { return m_name;       }
+string Employee::getDate() { return m_hire.str(); }

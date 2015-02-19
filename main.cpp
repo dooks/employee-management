@@ -49,4 +49,16 @@ using namespace std;
 #include "employee.h"
 
 int main() {
+	Employee* one = new Employee();
+	one->setName("Mark");
+	one->setID(1234);
+	one->setDate(01, 14, 2009);
+
+	cout << "Employee ID: " << one->getID() << endl;
+	cout << "Name: " << one->getName() << endl;
+	cout << "Hire date: " << one->getDate() << endl;
+
+	cout << "Press enter to continue...\n";
+	cin.get();
+	return 0;
 }

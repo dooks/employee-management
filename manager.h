@@ -1,8 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "employee.h"
-using std::vector;
+using std::string;
 
 class Employee; // Base class
 class ShiftSupervisor; // Derived from Employee
@@ -10,21 +9,27 @@ class ProductionWorker; // Derived from Employee
 class TeamLeader; // Derived from ProductionWorker
 
 class Manager {
-  static list employees;
-
 public:
-  typedef vector<Employee*> list;
-  typedef vector<Employee*>::iterator iter;
+  typedef std::vector<Employee*> evector;
+  typedef std::vector<Employee*>::iterator iter;
 
-  // Creation
-  static void list destroy(iter);
-  static void Employee add(Employee*);
+  // Mutators
+  static void destroy(iter);
+  static iter add(Employee*);
 
-  static list getPage(int, int);
-  static Employee* getEmployee(iter);
+  // Accessors
+  static evector getPage(int, int); // Get evector of employees from first->last
+  static Employee* getEmployee(iter); // Get detailed page of single employee
 
   // All searches return first item found to iterator
   static iter find(Employee*); // Search by employee pointer
   static iter find(string); // Search by name
   static iter find(int); // Search by employee number
+
+private:
+  // Do not create instance of this class
+  Manager();
+  Manager(Manager const&);
+
+  static evector employees;
 };

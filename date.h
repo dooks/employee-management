@@ -3,15 +3,15 @@
 #include <string>
 using std::string;
 
-struct date {
+class date {
   typedef unsigned int  dint;
   typedef unsigned char dbyte;
-  dint  year;
-  dbyte month;
-  dbyte day;
+  dint  m_year;
+  dbyte m_month;
+  dbyte m_day;
 
 public:
-  date(int);
+  date();
 
   // Accessors
   int getYear();
