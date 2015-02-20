@@ -4,6 +4,10 @@ using namespace std;
 
 Pager::Pager() {}
 
+Pager::state Pager::getState() { return m_state; }
+int Pager::getCursor()         { return m_cursor; }
+int Pager::getPage()           { return m_page; }
+
 void Pager::drawSplashPage() {
   cout << "Splash Page." << endl;
 }

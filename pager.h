@@ -2,6 +2,7 @@
 #include "manager.h"
 
 class Pager {
+public:
   enum dir {
     UP,
     DOWN,
@@ -13,20 +14,29 @@ class Pager {
     DEL,
     ADD,
     PAGE,
-    EMPLOYEE
+    VIEW
   };
-  int m_cursor;
-  int m_current_page;
 
-public:
   Pager();
-  void update();
+
+  // Mutators
   void move(dir);
 
+  // Accessors
+  state getState();
+  int   getCursor();
+  int   getPage();
+
+  // Member functions
   void drawSplashPage();
   void drawDelPage();
   void drawAddPage();
   void drawViewPage();
   void drawViewEmployee();
   int  waitInput();
+
+private:
+  state m_state;
+  int   m_cursor;
+  int   m_page;
 };

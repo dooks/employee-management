@@ -24,24 +24,40 @@
  *
  * Initialize current_page to 0
  * Initialize cursor to 0
- * Main loop:
- *  =Display current page of employee data
- *  If none:
- *    =Open employee add screen
  *
- *  switch user input
- *    case up:
- *      Move cursor up
- *    case down:
- *      Move cursor down
- *    case enter or space:
- *      =Open employee details
- *    case 'A' or 'a':
- *      =Open employee add screen
- *    case 'D' or 'd':
- *      =Open employee delete screen
- *    case esc:
- *      exit program
+ * Main loop:
+ *    switch pager state
+ *      case SPLASH:
+ *        Draw splash page
+ *        If user presses |enter|
+ *          change state to PAGE
+ *      case PAGE:
+ *        Draw current page with current cursor
+ *        switch user input:
+ *          case UP:
+ *            move cursor up
+ *          case DOWN:
+ *            move cursor down
+ *          case LEFT:
+ *            move cursor left
+ *          case RIGHT:
+ *            move cursor right
+ *          case A or a:
+ *            change state to ADD
+ *          case D or d:
+ *            change state to DEL
+ *          case ENTER:
+ *            if employee at cursor
+ *              change state to VIEW
+ *          case ESC:
+ *            change state to QUIT
+ *      case VIEW:
+ *        Draw page for employee at cursor
+ *        If user presses |ESC| or |ENTER|
+ *          change state to PAGE
+ *      case ADD:
+ *      case DEL:
+ *      case QUIT:
  */
 #include <iostream>
 #include <string>
@@ -100,25 +116,18 @@ int main() {
 
   // Main loop
   while(1) {
-    //Main loop:
-    // =Display current page of employee data
-    // If none:
-    //   =Open employee add screen
-
-    // switch user input
-    //   case up:
-    //     Move cursor up
-    //   case down:
-    //     Move cursor down
-    //   case enter or space:
-    //     =Open employee details
-    //   case 'A' or 'a':
-    //     =Open employee add screen
-    //   case 'D' or 'd':
-    //     =Open employee delete screen
-    //   case esc:
-    //     exit program
-    //
+    switch(pager.getState()) {
+      case Pager::SPLASH:
+        break;
+      case Pager::PAGE:
+        break;
+      case Pager::VIEW:
+        break;
+      case Pager::DEL:
+        break;
+      case Pager::ADD:
+        break;
+    }
     break;
   }
 
