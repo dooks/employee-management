@@ -7,7 +7,6 @@ using std::string;
 Employee::Employee() :
   m_name(""), m_number(0), m_hire(), m_type(EMPLOYEE) {
   // Do nothing
-  Manager::add(this);
 }
 
 // Mutators

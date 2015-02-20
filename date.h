@@ -4,11 +4,9 @@
 using std::string;
 
 class date {
-  typedef unsigned int  dint;
-  typedef unsigned char dbyte;
-  dint  m_year;
-  dbyte m_month;
-  dbyte m_day;
+  int  m_year;
+  int m_month;
+  int m_day;
 
 public:
   date();

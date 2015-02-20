@@ -5,22 +5,14 @@
 using std::string;
 
 class Employee {
-  friend class Manager;
-
+public:
   enum etype {
     EMPLOYEE = 0,
     PRODUCTION,
     SUPERVISOR,
     TEAMLEADER
   };
-  etype m_type;
 
-protected:
-  string m_name;
-  int    m_number;
-  date   m_hire;
-
-public:
   Employee();
 
   // Mutators
@@ -32,5 +24,12 @@ public:
   int      getID();
   string getName();
   string getDate();
+
+protected:
+  friend class Manager;
+  etype m_type;
+  string m_name;
+  int    m_number;
+  date   m_hire;
 };
 

@@ -9,14 +9,14 @@ date::date()
   // Empty contructor
 }
 // Mutators
-void date::setYear(int year) { m_year = (dint) year; }
-void date::setMonth(int month) { m_month = (dbyte) month; }
-void date::setDay(int day) { m_day = (dbyte) day; }
+void date::setYear(int year) { m_year = year; }
+void date::setMonth(int month) { m_month = month; }
+void date::setDay(int day) { m_day = day; }
 
 // Accessors
-int date::getYear() { return (int) m_year; }
+int date::getYear()  { return (int) m_year;  }
 int date::getMonth() { return (int) m_month; }
-int date::getDay() { return (int) m_day; }
+int date::getDay()   { return (int) m_day;   }
 
 string date::str() {
   stringstream ss;
@@ -26,7 +26,7 @@ string date::str() {
 
 ostream& operator<<(ostream& ss, const date& self) {
   // Promote datatypes to integers for printing
-  ss << +self.m_month << "-" << +self.m_day << "-" << +self.m_year;
+  ss << self.m_month << "-" << self.m_day << "-" << self.m_year;
   return ss;
 }
 
