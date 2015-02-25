@@ -1,13 +1,21 @@
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <string>
-using std::string;
 
 #include "manager.h"
 #include "employee.h"
 
-// Static variable Definitions
-Manager::evector Manager::employees;
+// Constructors
+Manager::Manager() {}
+Manager::~Manager() {
+  // Destroy employee objects...
+  for(Manager::iter it = employees.begin(); it != employees.end(); it++) {
+    delete (*it);
+    (*it) = NULL;
+  }
+  employees.clear();
+}
 
 
 // Mutators
@@ -21,10 +29,29 @@ Manager::iter Manager::add(Employee* employee) {
 }
 
 // Accessors
-Manager::evector Manager::getPage(int first, int last) {
-  Manager::evector retval(employees.begin()+first, employees.begin() + last);
-  // TODO: exception handling
-  // CRITICAL
+int Manager::getSize() {
+  return employees.size();
+}
+
+Manager::evector Manager::getRange(int first, int last) {
+  Manager::evector retval;
+  bool invalid = false;
+
+  try {
+    employees.at(first); // Check if indices exists
+    employees.at( last);
+  } catch(const std::out_of_range& err) {
+    //std::cerr << "Out of range error!" << err.what() << std::endl;
+    err.what();
+    invalid = true;
+  }
+
+  if(!invalid) {
+    // This causes undefined behavior if bounds are not valid!!!!
+    // No exception can be thrown for this constructor
+    retval = Manager::evector(employees.begin()+first, employees.begin() + last);
+  }
+
   return retval;
 }
 
@@ -39,7 +66,7 @@ Manager::iter Manager::find(Employee* term) {
   return employees.end();
 }
 
-Manager::iter Manager::find(string term) {
+Manager::iter Manager::find(std::string term) {
   // Search by name
   for(Manager::iter i = employees.begin(); i != employees.end(); i++) {
     if(term == (*i)->getName())

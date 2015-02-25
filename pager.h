@@ -1,42 +1,30 @@
 #pragma once
 #include "manager.h"
 
+/*
+ * Keeps track of page numbers, current page, cursor location
+ */
 class Pager {
-public:
-  enum dir {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-  };
-  enum state {
-    SPLASH,
-    DEL,
-    ADD,
-    PAGE,
-    VIEW
-  };
+  int m_cursor;      // Current cursor
+  int m_pageNumber;  // Current page
+  int m_numElements; // Length of elements to keep track of
+  int m_pageSize;    // How many elements to display per page
 
-  Pager();
+public:
+  enum dir { UP, DOWN, LEFT, RIGHT };
+
+  Pager(int page_size);
 
   // Mutators
-  void move(dir);
+  void setPageSize(int);
+  void   setLength(int);
+  void  moveCursor(dir);
+  void    movePage(dir);
 
   // Accessors
-  state getState();
-  int   getCursor();
-  int   getPage();
-
-  // Member functions
-  void drawSplashPage();
-  void drawDelPage();
-  void drawAddPage();
-  void drawViewPage();
-  void drawViewEmployee();
-  int  waitInput();
-
-private:
-  state m_state;
-  int   m_cursor;
-  int   m_page;
+  int getPageNumber(); // Current page number
+  int getCursor();     // Get position of cursor on current page
+  int getPageFirst();  // Get number of item at start of current page
+  int getPageLast();   // Get number of item at end of current page
+  int getAtCursor();   // Get number of item at cursor on current page
 };

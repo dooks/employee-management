@@ -2,135 +2,170 @@
  * Demonstrate Employee class and (children) implementations
  *
  * Psuedocode:
- * // Read files and create employee objects
- * Open binary file "employee.db"
  *
- * While not end of file
- *  Store header (for type of employee)
- *  if header is null
- *    break
- *  Switch line header
- *    // Instance management statically handled within class
- *    case Employee:
- *      create new Employee
- *    case ProductionWorker:
- *      create new ProductionWorker
- *    case ShiftSupervisor:
- *      create new ShiftSupervisor
- *    case TeamLeader:
- *      create new TeamLeader
+ * Define globals
+ * -- Seed RNG
+ * -- Main quit flag
+ * -- State flag
+ *    0 - Splash page
+ *    1 - Main loop (paging)
+ *    2 - Quitting / garbage collection
  *
- * Display program header and additional information
+ * Define global structures
+ * -- Input   - Handles user input
+ * -- Display - Handles drawing to the screen
+ * -- Manager - Keeps track of Employee obj, and all children
+ * -- Pager   - Keeps track of paging structure
  *
- * Initialize current_page to 0
- * Initialize cursor to 0
+ * Create random employees
+ *  switch(random type)
+ *    case employee:
+ *      create new   employee object
+ *    case production:
+ *      create new production object
+ *    case supervisor:
+ *      create new supervisor object
+ *    case teamleader:
+ *      create new teamleader object
+ * Randomize new employee
+ * Add employee to manager
  *
- * Main loop:
- *    switch pager state
- *      case SPLASH:
- *        Draw splash page
- *        If user presses |enter|
- *          change state to PAGE
- *      case PAGE:
- *        Draw current page with current cursor
- *        switch user input:
- *          case UP:
- *            move cursor up
- *          case DOWN:
- *            move cursor down
- *          case LEFT:
- *            move cursor left
- *          case RIGHT:
- *            move cursor right
- *          case A or a:
- *            change state to ADD
- *          case D or d:
- *            change state to DEL
- *          case ENTER:
- *            if employee at cursor
- *              change state to VIEW
- *          case ESC:
- *            change state to QUIT
- *      case VIEW:
- *        Draw page for employee at cursor
- *        If user presses |ESC| or |ENTER|
- *          change state to PAGE
- *      case ADD:
- *      case DEL:
- *      case QUIT:
+ * Initialize pager length to size of list of employees
+ *
+ * Main loop - while quit is false
+ *  switch(program state)
+ *    case SPLASH:
+ *      Display splash screen
+ *      switch user input
+ *        case Any key
+ *          change state to VIEWPAGE
+ *    case VIEWPAGE:
+ *      Create temporary list of employees from Manager
+ *        based on current page values
+ *      Display page header
+ *      Display page list from temporary list
+ *      Display page footer
+ *
+ *      switch user input
+ *        case P or p:
+ *          Move page previous
+ *        case N or n:
+ *          Move page next
+ *        case Q or q:
+ *          change state to QUIT
+ *    case QUIT:
+ *      set quit flag to true
  */
+#define DEBUG
+#define PAGE_SIZE 5
+
+#ifdef DEBUG
+  #define NUM_RAND_EMPLOYEES 50
+#endif
+
+// Core modules
 #include <iostream>
 #include <string>
-#include <fstream>
+#include <stdexcept>
 #include <cstdlib>
+#include <ctime>
 using namespace std;
 
-#include "employee.h"
+// Employee modules
+#include "employee.h"   // Base class
+
+// Interactive modules
 #include "pager.h"
+#include "display.h"
+#include "input.h"
 
 int main() {
-  // Read files and create employee objects
-  // Open binary file "employee.db"
-  ifstream inFile("employee.db", ios::in | ios::binary);
+  // Globals
+  srand((unsigned) time(NULL)); // Seed RNG
+  bool quit = 0;
+  int state = 0;  //  0 - Splash page
+                  //  1 - Viewing pages
+                  // -1 - Quitting
 
-  if(!inFile) { cout << "Could not open file.\n" << endl; }
-  else {
-    // Check if file is empty
-    inFile.seekg(0, ios::end);
-    if(inFile.tellg() == 0) { cout << "File is empty.\n" << endl; }
-    else {
-      // While not end of file
-      do {
-        //  Store header (for type of employee)
-        Employee::etype header;
-        inFile.read(reinterpret_cast<char*>(header), sizeof(Employee::etype));
+  // Initialize global program structures
+  Input     input; // Handles sanitizing user input
+  Display display; // Handles displaying to cout, and clearing
+  Manager manager; // Stores newly created employee objects
+  Employee::INIT_NAMES(); // Initialize random name list
+  Pager pager(PAGE_SIZE); // Stores list and page information
+  Manager::evector current_page; // Stores list of employees of current page
 
-        // Critical TODO: exception handling
-        //if(!header) { break; }
-        if(inFile.fail()) break;
-
-        Employee* temp = NULL;
-        switch(header) {
-          case Employee::EMPLOYEE:
-            temp = new Employee(); // Constructor handles ptr management
-            Manager::add(temp);
-            break;
-            //    case ProductionWorker:
-            //      create new ProductionWorker
-            //    case ShiftSupervisor:
-            //      create new ShiftSupervisor
-            //    case TeamLeader:
-            //      create new TeamLeader
-          default:
-            break;
-        }
-      } while(!inFile.eof());
+  for(int i = 0; i < NUM_RAND_EMPLOYEES; i++) {
+    Employee* temp;
+    switch((etype) rand() % 4) {
+      case EMPLOYEE: // Random employee
+        temp = new Employee;
+        break;
+      case PRODUCTION: // Random production worker
+        temp = new ProductionWorker;
+        break;
+      case SUPERVISOR: // Random supervisor
+        temp = new ShiftSupervisor;
+        break;
+      case TEAMLEADER: // Random teamleader
+        temp = new TeamLeader;
+        break;
+      default:
+        temp = new Employee	;
     }
+    temp->setRandom();
+    manager.add(temp);
   }
 
-
-  // Initialize pager
-  Pager pager;
-  // Display program header and additional information
-  pager.drawSplashPage();
+  // Initialize pager length
+  pager.setLength(manager.getSize());
 
   // Main loop
-  while(1) {
-    switch(pager.getState()) {
-      case Pager::SPLASH:
+  while(!quit) {
+    switch(state) {
+      case 0: // Splash screen
+        // Display program header and additional information
+        display.displaySplash();
+        switch(input.getCh()) {
+          case '\0':
+          default:
+            // Any key to continue...
+            state = 1; // Viewing state
+        }
         break;
-      case Pager::PAGE:
+      case 1: // Viewing pages
+        // Create temporary list of employeees on page
+        current_page = manager.getRange( pager.getPageFirst(), pager.getPageLast() );
+        display.displayPageHeader( pager.getPageNumber() );
+        // Display temporary list
+        display.displayPage( current_page );
+        display.displayPageFooter();
+
+        switch(input.getCh()) {
+          case 'p':
+          case 'P': // Previous page
+            pager.movePage(Pager::UP);
+            break;
+          case 'n':
+          case 'N': // Next page
+            pager.movePage(Pager::DOWN);
+            break;
+          case 'q':
+          case 'Q':
+            state = -1; // QUIT
+          default:
+            // Do nothing
+            break;
+        }
         break;
-      case Pager::VIEW:
-        break;
-      case Pager::DEL:
-        break;
-      case Pager::ADD:
+      case -1: // Quit
+        cout << "Quitting..\n";
+        quit = true;
         break;
     }
-    break;
   }
 
+  cin.ignore();
   cout << "Press enter to exit...\n";
   cin.get();
   return 0;

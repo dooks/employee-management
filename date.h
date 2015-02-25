@@ -3,6 +3,10 @@
 #include <string>
 using std::string;
 
+/*
+ * Date object
+ * Creates a structure that allows access for human readable date
+ */
 class date {
   int  m_year;
   int m_month;
@@ -27,6 +31,7 @@ public:
 
   // Arithmetic operators
   // date + date
+  // Unused...
   friend date operator+(const date&, const date&);
   friend date operator-(const date&, const date&);
   friend date operator+(const date&, const int);
