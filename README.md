@@ -1,5 +1,5 @@
 # Employee Management Lab
-CIS22B Lab Project, by Dylan Lotivio
+CIS22B Lab Project
 
 ## 1. Employee and ProductionWorker Classes
 > Design a class named Employee. The class should keep the following information in member variables:
